@@ -1,25 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./pages/auth/login/Login";
+import Registration from "./pages/auth/registration/registration";
+import Profile from "./pages/auth/profiledetails/profile";
+import ProductList from "./pages/product/ProductList";
+import AddProduct from "./pages/product/AddProduct";
+
+const publicRoute = [
+  {
+    path: '',
+    component: <Login /> 
+  },
+  {
+    path: '/registration',
+    component: <Registration />
+  },
+  {
+    path: '/add-product',
+    component: <AddProduct />
+  },
+  {
+    path: '/products',
+    component: <ProductList />
+  }
+
+]
+const protectedRoute = [
+  {
+    path: '/profile',
+    component: <Profile />
+  }
+]
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <Routes>
+        {publicRoute.map((route)=>{
+          return(
+            <>
+            <Route path={route.path} element={route.component} />
+            
+            </>
+          )
+        })}
+        
+      </Routes>
+    </Router>
+  )
 }
 
 export default App;

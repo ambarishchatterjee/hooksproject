@@ -1,12 +1,12 @@
-import { Label } from '@mui/icons-material'
-import { Button, TextField, InputLabel, Typography, Card, FormControl, Input, FormHelperText, Box } from '@mui/material'
+
+import { Button, TextField, Typography, Box } from '@mui/material'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
 import toast, { Toaster } from 'react-hot-toast';
 import axiosInstance from '../../../api/axios'
 import { endPoints } from '../../../api/endPoints'
+import { Key, KeyTwoTone } from '@mui/icons-material';
 
 export default function Login() {
   const {
@@ -20,25 +20,27 @@ export default function Login() {
     const formData = new FormData()
     formData.append("email", data.email)
     formData.append("password", data.password)
-    try{
-      const  { data} = await axiosInstance.post(endPoints.auth.login, formData)
-      if(data.status === 200){
+    try {
+      const { data } = await axiosInstance.post(endPoints.auth.login, formData)
+      if (data.status === 200) {
         toast.success(data.message)
         localStorage.setItem("token", data.token)
-      }else{
+      } else {
         toast.error(data.message)
       }
-  }catch(error){
-    toast.error(data.error)
-  }
+    } catch (error) {
+      toast.error(data.error)
+    }
 
   }
   return (
     <>
-      <Box component="section" sx={{ p: 2, m: 2, maxWidth: '500px', border: '1px dashed grey' }}>
+      <Box width={600} marginX={'auto'} marginTop={4} bgcolor={'#f5f5f5'} display={'flex'} flexDirection={'column'} gap={2} padding={4}>
         <form autoComplete="off" >
 
-          <Typography color="text.primary" fontWeight="semiBold"
+          <Typography color="text.primary"
+            fontSize={40}
+            fontWeight="semiBold"
             sx={{
               p: 2,
               mb: 2,
@@ -90,16 +92,28 @@ export default function Login() {
             type="submit"
             variant="outlined"
             color="info"
+            startIcon={<Key />}
             size="small"
             disableElevation
             fullWidth
-            sx={{ my: 2, py: 2 }}
+            sx={{ my: 2, py: 1 }}
             onClick={handleSubmit(ClickFuntion)}
           >
             Login
           </Button>
 
-          <Link to="/registration">Sign Up</Link>
+          <Link to="/registration">
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<KeyTwoTone />}
+              fullWidth
+
+            >
+              Sign Up
+            </Button>
+
+          </Link>
 
 
         </form>

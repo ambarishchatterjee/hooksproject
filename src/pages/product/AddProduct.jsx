@@ -95,6 +95,21 @@ export default function AddProduct() {
                         type='file'
                         error={!!errors.image}
                         helperText={errors.image && errors.image.message}
+                        sx={{ backgroundColor: 'white', borderRadius: '5px', mb: 4 }}
+
+                        slotProps={{
+                            inputLabel: {
+                                sx: {
+                                    color: "#000",
+                                }
+                            },
+                            input: {
+                                sx: {
+                                    backgroundColor: "white",
+                                    color: "#000",
+                                },
+                            }
+                        }}
 
                     />
 

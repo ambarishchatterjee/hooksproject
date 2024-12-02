@@ -2,9 +2,10 @@ import { Button, TextField, Typography, Box, Stack } from '@mui/material'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import toast, {Toaster} from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
 import axiosInstance from '../../../api/axios'
 import { endPoints } from '../../../api/endPoints'
+import { Key } from '@mui/icons-material'
 
 export default function Registration() {
     const [image, setImage] = useState()
@@ -24,22 +25,24 @@ export default function Registration() {
         formData.append("profile_pic", image)
         try {
             const { data } = await axiosInstance.post(endPoints.auth.register, formData)
-            if(data.status === 200){
+            if (data.status === 200) {
                 toast.success(data.message)
-                
-              }else{
+
+            } else {
                 toast.error(data.message)
-              }
+            }
         } catch (error) {
             toast.error(data.message)
         }
     }
     return (
         <>
-            <Box component="section" marginX={'auto'} marginTop={4} sx={{ p: 2, m: 2, maxWidth: '500px', border: '1px dashed grey' }}>
+            <Box width={600} marginX={'auto'} marginTop={4} bgcolor={'#f5f5f5'} display={'flex'} flexDirection={'column'} gap={2} padding={4}>
                 <form autoComplete="off" >
 
-                    <Typography color="text.primary" fontWeight="semiBold"
+                    <Typography color="text.primary"
+                    fontSize={40}
+                     fontWeight="semiBold"
                         sx={{
                             p: 2,
                             mb: 2,
@@ -163,13 +166,23 @@ export default function Registration() {
                         size="small"
                         disableElevation
                         fullWidth
-                        sx={{ my: 2, py: 2 }}
+                        sx={{ mb: 2, py: 1 }}
                         onClick={handleSubmit(ClickFuntion)}
                     >
                         Registration
                     </Button>
 
-                    <Link to="/">Login</Link>
+                    <Link to="/">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            startIcon={<Key />}
+
+                        >
+                            Already have an account? Login
+                        </Button>
+                    </Link>
 
 
                 </form>

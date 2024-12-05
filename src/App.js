@@ -4,6 +4,7 @@ import Registration from "./pages/auth/registration/registration";
 import Profile from "./pages/auth/profiledetails/profile";
 import ProductList from "./pages/product/ProductList";
 import AddProduct from "./pages/product/AddProduct";
+import ProductDetails from "./pages/product/ProductDetails";
 
 const publicRoute = [
   {
@@ -21,6 +22,10 @@ const publicRoute = [
   {
     path: '/products',
     component: <ProductList />
+  },
+  {
+    path: '/product/:id',
+    component: <ProductDetails />
   }
 
 ]

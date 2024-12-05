@@ -2,7 +2,7 @@
 import { Button, TextField, Typography, Box } from '@mui/material'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast';
 import axiosInstance from '../../../api/axios'
 import { endPoints } from '../../../api/endPoints'
@@ -15,6 +15,8 @@ export default function Login() {
     formState: { errors }
   } = useForm()
 
+  const navigate = useNavigate()
+
 
   const ClickFuntion = async (data) => {
     const formData = new FormData()
@@ -25,6 +27,7 @@ export default function Login() {
       if (data.status === 200) {
         toast.success(data.message)
         localStorage.setItem("token", data.token)
+        navigate("/products")
       } else {
         toast.error(data.message)
       }

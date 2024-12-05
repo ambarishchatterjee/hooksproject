@@ -6,6 +6,10 @@ export const baseURL = adminUrl;
 
 let axiosInstance = axios.create({ baseURL })
 
+export const productImage = (media) => {
+  return `https://wtsacademy.dedicateddevelopers.us/uploads/product/${media}`;
+};
+
 axiosInstance.interceptors.request.use(
   async function (config) {
     console.log(config)

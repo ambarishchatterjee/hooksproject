@@ -5,7 +5,7 @@ import axiosInstance from '../../api/axios'
 import { endPoints } from '../../api/endPoints'
 import toast from 'react-hot-toast'
 import { Add, FormatListBulletedOutlined } from '@mui/icons-material'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function AddProduct() {
     const [productImage, setProductImage] = useState()
@@ -14,6 +14,7 @@ export default function AddProduct() {
         handleSubmit,
         formState: { errors }
     } = useForm()
+    const navigate = useNavigate()
 
     const clickFunction = async (data) => {
         const formData = new FormData()
@@ -24,6 +25,7 @@ export default function AddProduct() {
             const { data } = await axiosInstance.post(endPoints.product.addProduct, formData)
             if (data.status === 200) {
                 toast.success(data.message)
+                navigate("/products")
             } else {
                 toast.error(data.message)
             }

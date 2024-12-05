@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axiosInstance, { productImage } from "../../api/axios";
 import { endPoints } from "../../api/endPoints";
 import { Link, useNavigate } from "react-router-dom";
-import { Add, Delete } from "@mui/icons-material";
+import { Add, Delete, DeleteOutline } from "@mui/icons-material";
 import toast from "react-hot-toast";
 import SweetAlertComponent from "../../ui/SweetAlert";
 
@@ -89,10 +89,10 @@ export default function ProductList() {
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" onClick={() => { navigate(`/product/${product._id}`) }}>Learn More</Button>
-
+                    <Button size="small" variant="outlined" onClick={() => { navigate(`/product/${product._id}`) }}>Learn More</Button>
+                    <Button size="small" onClick={() => ((setDelete(product._id), setModal(true)))}><DeleteOutline/></Button>
                   </CardActions>
-                  <button onClick={() => ((setDelete(product._id), setModal(true)))}>delete</button>
+                  
                 </Card>
               </Grid2>
               // <ListItem

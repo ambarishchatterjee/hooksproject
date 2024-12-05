@@ -5,6 +5,7 @@ import Profile from "./pages/auth/profiledetails/profile";
 import ProductList from "./pages/product/ProductList";
 import AddProduct from "./pages/product/AddProduct";
 import ProductDetails from "./pages/product/ProductDetails";
+import Wrapper from "./pages/layout/wrapper/Wrapper";
 
 const publicRoute = [
   {
@@ -14,6 +15,10 @@ const publicRoute = [
   {
     path: '/registration',
     component: <Registration />
+  },
+  {
+    path: '/profile',
+    component: <Profile />
   },
   {
     path: '/add-product',
@@ -39,6 +44,7 @@ const protectedRoute = [
 function App() {
   return (
     <Router>
+      <Wrapper>
       <Routes>
         {publicRoute.map((route)=>{
           return(
@@ -50,6 +56,7 @@ function App() {
         })}
         
       </Routes>
+      </Wrapper>
     </Router>
   )
 }

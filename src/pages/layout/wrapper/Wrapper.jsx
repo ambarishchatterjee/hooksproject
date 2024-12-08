@@ -1,10 +1,12 @@
 import React from 'react'
 import Header from '../header/Header'
 
-export default function Wrapper({children}) {
+export default function Wrapper({userlogin,children}) {
   return (
     <>
-    <Header />
+    <Header userlogin = {userlogin} />
+   {/* { console.log(userlogin)} */}
+    
       {children}
     </>
   )

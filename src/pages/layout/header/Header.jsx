@@ -5,7 +5,6 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -15,18 +14,12 @@ import AdbIcon from '@mui/icons-material/Adb';
 import axiosInstance, { productImage } from '../../../api/axios';
 import { endPoints } from '../../../api/endPoints';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Logout'];
 const privateMenu = [
   {
     text: 'products',
     link: '/products'
-  },
-  {
-    text: 'profile',
-    link: '/profile'
   }
 ]
 
@@ -47,18 +40,18 @@ const publicMenu = [
 export default function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [user, setUser] = React.useState(false)
-  const [userData, setUserData] = React.useState(false)
+  const [isUserlogin, setIsLoggedIn] = React.useState(false)
+  const [userData, setUserDetails] = React.useState()
 
 
   const fetchData = async () => {
     try {
       const { data } = await axiosInstance.get(endPoints.auth.profile)
       if (data.status === 200) {
-        setUser(true)
-        setUserData(data.data)
+        setIsLoggedIn(true)
+        setUserDetails(data.data)
       } else {
-        setUser(false)
+        setIsLoggedIn(false)
         toast.error(data.message)
       }
 
@@ -73,11 +66,14 @@ export default function Header() {
     fetchData()
   }, [])
 
+  const navigate = useNavigate()
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
+    
   };
 
   const handleCloseNavMenu = () => {
@@ -87,6 +83,14 @@ export default function Header() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleLogout = () => {
+    isUserlogin(false)
+    localStorage.setItem("token", "")
+    navigate("/")
+    handleCloseUserMenu()
+
+  }
 
   return (
     <AppBar position="static">
@@ -114,7 +118,7 @@ export default function Header() {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {user && privateMenu.map((page) => (
+            {isUserlogin && privateMenu.map((page) => (
               <Link to={page.link} key={page.index}>
                 <Button
                   onClick={handleCloseNavMenu}
@@ -126,47 +130,54 @@ export default function Header() {
 
             ))}
 
-            {!user && publicMenu.map((page) => (
-              <Link to={page.link} key={page.index}>
-                <Button
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  {page.text}
-                </Button>
-              </Link>
-
-            ))}
+           
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={userData.first_name} src={productImage(userData.image)} />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+          {isUserlogin && (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt={userData.first_name} src={productImage(userData.image)} />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+               
+                  <MenuItem  key={'profile'}>
+                    <Link to='/profile'><Typography sx={{ textAlign: 'center' }}>Profile </Typography></Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout} key={'logout'}>
+                    <Typography sx={{ textAlign: 'center' }}>Logout </Typography>
+                  </MenuItem>
+               
+              </Menu>
 
-          </Box>
+            </Box>
+          )}
+
+          {!isUserlogin && (
+            <Link to="/" >
+              <Button
+
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                Login
+              </Button>
+            </Link>
+          )}
+
         </Toolbar>
       </Container>
     </AppBar>

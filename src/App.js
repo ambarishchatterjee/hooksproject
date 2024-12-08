@@ -42,6 +42,8 @@ const protectedRoute = [
 ]
 
 function App() {
+
+  
   return (
     <Router>
       <Wrapper>

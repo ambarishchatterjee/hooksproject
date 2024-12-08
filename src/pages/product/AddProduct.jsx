@@ -1,4 +1,4 @@
-import { TextField, Typography, Button, Box, Stack, List } from '@mui/material'
+import { TextField, Typography, Button, Box, Stack } from '@mui/material'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import axiosInstance from '../../api/axios'
@@ -28,6 +28,7 @@ export default function AddProduct() {
                 navigate("/products")
             } else {
                 toast.error(data.message)
+                navigate("/")
             }
 
         } catch (error) {

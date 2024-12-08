@@ -1,19 +1,20 @@
-import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Typography, Button, IconButton, Grid, Grid2, Card, CardMedia, CardContent, CardActions } from "@mui/material";
+import { Box, Typography, Button, Grid2, Card, CardMedia, CardContent, CardActions } from "@mui/material";
 import { useEffect, useState } from "react";
 import axiosInstance, { productImage } from "../../api/axios";
 import { endPoints } from "../../api/endPoints";
 import { Link, useNavigate } from "react-router-dom";
-import { Add, Delete, DeleteOutline } from "@mui/icons-material";
+import { Add, DeleteOutline } from "@mui/icons-material";
 import toast from "react-hot-toast";
 import SweetAlertComponent from "../../ui/SweetAlert";
 
 
-export default function ProductList() {
+export default function ProductList({userlogin}) {
   const [list, setList] = useState()
   const [modal, setModal] = useState()
   const [delete1, setDelete] = useState("")
 
   const navigate = useNavigate()
+  
 
   const handleDelete = async () => {
     //setModal(true)
@@ -42,9 +43,6 @@ export default function ProductList() {
     //}
   }
 
-  const handleDeletep = () => {
-
-  }
 
   const fetchData = async (data) => {
 

@@ -15,7 +15,6 @@ export default function ProductDetails() {
 
         try {
             const { data } = await axiosInstance.get(endPoints.product.productdetails + id)
-            console.log(data.data)
             setList(data.data)
         } catch (error) {
 
@@ -24,12 +23,12 @@ export default function ProductDetails() {
 
     useEffect(() => {
         fetchData()
-    })
+    },[])
     return (
         <>
             <Box width={600} padding={2} bgcolor={'#f5f5f5'} marginX={'auto'} >
                 <Typography variant="h1" color="initial" fontSize={40}>{list?.title}</Typography>
-                <img src={productImage(list?.image)} />
+                <img src={productImage(list?.image)} alt={list?.title} />
                 <Typography variant="body1" color="initial" fontSize={16}>
                     {list?.description}
                 </Typography>

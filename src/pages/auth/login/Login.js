@@ -8,7 +8,7 @@ import axiosInstance from '../../../api/axios'
 import { endPoints } from '../../../api/endPoints'
 import { Key, KeyTwoTone } from '@mui/icons-material';
 
-export default function Login() {
+export default function Login({userlogin}) {
   const {
     register,
     handleSubmit,
@@ -16,6 +16,10 @@ export default function Login() {
   } = useForm()
 
   const navigate = useNavigate()
+
+//  console.log(userlogin);
+  
+
 
 
   const ClickFuntion = async (data) => {

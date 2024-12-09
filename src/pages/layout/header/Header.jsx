@@ -40,18 +40,16 @@ const publicMenu = [
 export default function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [isUserlogin, setIsLoggedIn] = React.useState(false)
   const [userData, setUserDetails] = React.useState()
+  const [isLogin, setIsLogin] = React.useState(false)
 
 
   const fetchData = async () => {
     try {
       const { data } = await axiosInstance.get(endPoints.auth.profile)
       if (data.status === 200) {
-        setIsLoggedIn(true)
         setUserDetails(data.data)
       } else {
-        setIsLoggedIn(false)
         toast.error(data.message)
       }
 
@@ -64,6 +62,10 @@ export default function Header() {
   }
   React.useEffect(() => {
     fetchData()
+    const token = localStorage.getItem("token")
+    if( token != null || token != undefined){
+      setIsLogin(true)
+    }
   }, [])
 
   const navigate = useNavigate()
@@ -73,7 +75,7 @@ export default function Header() {
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-    
+
   };
 
   const handleCloseNavMenu = () => {
@@ -85,8 +87,7 @@ export default function Header() {
   };
 
   const handleLogout = () => {
-    isUserlogin(false)
-    localStorage.setItem("token", "")
+    localStorage.removeItem("token")
     navigate("/")
     handleCloseUserMenu()
 
@@ -118,7 +119,7 @@ export default function Header() {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {isUserlogin && privateMenu.map((page) => (
+            {privateMenu.map((page) => (
               <Link to={page.link} key={page.index}>
                 <Button
                   onClick={handleCloseNavMenu}
@@ -130,13 +131,12 @@ export default function Header() {
 
             ))}
 
-           
           </Box>
-          {isUserlogin && (
+          {userData && (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={userData.first_name} src={productImage(userData.image)} />
+                  <Avatar alt={userData && userData.first_name} src={userData && productImage(userData.image)} />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -154,29 +154,32 @@ export default function Header() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-               
-                  <MenuItem  key={'profile'}>
-                    <Link to='/profile'><Typography sx={{ textAlign: 'center' }}>Profile </Typography></Link>
-                  </MenuItem>
-                  <MenuItem onClick={handleLogout} key={'logout'}>
-                    <Typography sx={{ textAlign: 'center' }}>Logout </Typography>
-                  </MenuItem>
-               
+
+                <MenuItem key={'profile'}>
+                  <Link to='/profile'><Typography sx={{ textAlign: 'center' }}>Profile </Typography></Link>
+                </MenuItem>
+                <MenuItem onClick={handleLogout} key={'logout'}>
+                  <Typography sx={{ textAlign: 'center' }}>Logout </Typography>
+                </MenuItem>
+
               </Menu>
 
             </Box>
           )}
 
-          {!isUserlogin && (
+
+          {!isLogin && (
             <Link to="/" >
               <Button
-
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 Login
               </Button>
             </Link>
-          )}
+          )
+
+          }
+
 
         </Toolbar>
       </Container>

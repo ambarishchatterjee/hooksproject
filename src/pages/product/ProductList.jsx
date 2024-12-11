@@ -1,20 +1,20 @@
-import { Box, Typography, Button, Grid2, Card, CardMedia, CardContent, CardActions } from "@mui/material";
+import { Box, Typography, Button, Grid2, Card, CardMedia, CardContent, CardActions, IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
 import axiosInstance, { productImage } from "../../api/axios";
 import { endPoints } from "../../api/endPoints";
 import { Link, useNavigate } from "react-router-dom";
-import { Add, DeleteOutline } from "@mui/icons-material";
+import { Add, DeleteOutline, EditOutlined } from "@mui/icons-material";
 import toast from "react-hot-toast";
 import SweetAlertComponent from "../../ui/SweetAlert";
 
 
-export default function ProductList({userlogin}) {
+export default function ProductList({ userlogin }) {
   const [list, setList] = useState()
   const [modal, setModal] = useState()
   const [delete1, setDelete] = useState("")
 
   const navigate = useNavigate()
-  
+
 
   const handleDelete = async () => {
     //setModal(true)
@@ -76,7 +76,7 @@ export default function ProductList({userlogin}) {
                   <CardMedia
                     sx={{ height: 140 }}
                     image={productImage(product.image)}
-                    title="green iguana"
+                    title={product.title}
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
@@ -88,9 +88,14 @@ export default function ProductList({userlogin}) {
                   </CardContent>
                   <CardActions>
                     <Button size="small" variant="outlined" onClick={() => { navigate(`/product/${product._id}`) }}>Learn More</Button>
-                    <Button size="small" onClick={() => ((setDelete(product._id), setModal(true)))}><DeleteOutline/></Button>
+
+                    <Button size="small" color="primary" onClick={() => { navigate(`/product/update/${product._id}`) }}>
+                      <EditOutlined />
+                    </Button>
+
+                    <Button size="small" onClick={() => ((setDelete(product._id), setModal(true)))}><DeleteOutline /></Button>
                   </CardActions>
-                  
+
                 </Card>
               </Grid2>
               // <ListItem

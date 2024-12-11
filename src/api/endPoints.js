@@ -8,6 +8,7 @@ export const endPoints = {
         addProduct: `/product/create`,
         productList: `/product/list`,
         removeProduct: `/product/remove`,
-        productdetails: `/product/detail/`
+        productdetails: `/product/detail/`,
+        productupdate: `/product/update/`
     }
 }

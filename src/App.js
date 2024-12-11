@@ -7,6 +7,7 @@ import AddProduct from "./pages/product/AddProduct";
 import ProductDetails from "./pages/product/ProductDetails";
 import Wrapper from "./pages/layout/wrapper/Wrapper";
 import toast from "react-hot-toast";
+import UpdateProduct from "./pages/product/UpdateProduct";
 
 const publicRoute = [
   {
@@ -17,7 +18,6 @@ const publicRoute = [
     path: '/registration',
     component: <Registration />
   }
-
 ]
 const protectedRoute = [
   {
@@ -35,6 +35,10 @@ const protectedRoute = [
   {
     path: '/product/:id',
     component: <ProductDetails />
+  },
+  {
+    path: '/product/update/:id',
+    component: <UpdateProduct />
   }
 ]
 

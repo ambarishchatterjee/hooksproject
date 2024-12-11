@@ -1,7 +1,7 @@
 import { TextField, Typography, Button, Box, Stack, Avatar, Input } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import axiosInstance from '../../api/axios'
+import axiosInstance, { productImage } from '../../api/axios'
 import { endPoints } from '../../api/endPoints'
 import toast from 'react-hot-toast'
 import { Add, FormatListBulletedOutlined } from '@mui/icons-material'
@@ -62,7 +62,7 @@ export default function UpdateProduct() {
 
         try {
             const { data } = await axiosInstance.post(endPoints.product.productupdate, formData)
-            
+
 
             if (data.status === 200) {
                 toast.success(data.message)
@@ -91,11 +91,12 @@ export default function UpdateProduct() {
                         {...register("title", {
                             required: "Product Title is required"
                         })}
-                        variant="standard"
+                        variant="filled"
                         fullWidth
+                        
 
                         type='text'
-                        sx={{ mb: 2 }}
+                        sx={{ mb: 2, pt: 2 }}
                         error={errors.title}
                         helperText={errors.title && errors.title.message}
                     />
@@ -104,9 +105,9 @@ export default function UpdateProduct() {
                         id="description"
                         label="Product Description"
                         fullWidth
-                        variant='standard'
-
-                        sx={{ mb: 2 }}
+                        variant='filled'
+                        color='secondary'
+                        sx={{ mb: 2 , pt: 2 }}
                         rows={4}
                         multiline
                         {...register("description", {
@@ -117,30 +118,30 @@ export default function UpdateProduct() {
 
                     />
 
-<Stack direction="row" alignItems="center" spacing={2} sx={{ marginTop: 2 }}>
-              <Avatar
-                alt="Product Picture"
-                src={
-                  image 
-                    ? URL.createObjectURL(image) 
-                    : list?.image 
-                      ? `https://wtsacademy.dedicateddevelopers.us/uploads/product/${list.image}`
-                      : ''
-                }
-                sx={{ width: 90, height: 90 }}
-              />
-              <label htmlFor="product-pic-upload">
-                <Input
-                  accept="image/*"
-                  id="product-pic-upload"
-                  type="file"
-                  onChange={(e) =>
-                    setImage(e.target.files ? e.target.files[0] : null)
-                  }
-                />
-                
-              </label>
-            </Stack>
+                    <Stack direction="row" alignItems="center" spacing={2} sx={{ marginTop: 2 }}>
+                        <Avatar
+                            alt="Product Picture"
+                            src={
+                                image
+                                    ? URL.createObjectURL(image)
+                                    : list?.image
+                                        ? productImage(list.image)
+                                        : ''
+                            }
+                            sx={{ width: 90, height: 90 }}
+                        />
+                        <label htmlFor="product-pic-upload">
+                            <Input
+                                accept="image/*"
+                                id="product-pic-upload"
+                                type="file"
+                                onChange={(e) =>
+                                    setImage(e.target.files ? e.target.files[0] : null)
+                                }
+                            />
+
+                        </label>
+                    </Stack>
 
 
 
@@ -154,12 +155,7 @@ export default function UpdateProduct() {
                         </Button>
                     </Link>
 
-
-
                 </form>
-
-
-
             </Box>
         </div>
     )

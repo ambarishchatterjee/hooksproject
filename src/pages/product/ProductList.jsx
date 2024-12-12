@@ -1,4 +1,4 @@
-import { Box, Typography, Button, Grid2, Card, CardMedia, CardContent, CardActions, IconButton } from "@mui/material";
+import { Box, Typography, Button, Grid2, Card, CardMedia, CardContent, CardActions, IconButton, Pagination } from "@mui/material";
 import { useEffect, useState } from "react";
 import axiosInstance, { productImage } from "../../api/axios";
 import { endPoints } from "../../api/endPoints";
@@ -12,6 +12,8 @@ export default function ProductList({ userlogin }) {
   const [list, setList] = useState()
   const [modal, setModal] = useState()
   const [delete1, setDelete] = useState("")
+  const [totalpages, setTotalpages] = useState(1)
+  const [currentPage, setCurrentPage] = useState(1)
 
   const navigate = useNavigate()
 
@@ -19,17 +21,19 @@ export default function ProductList({ userlogin }) {
   const handleDelete = async () => {
     //setModal(true)
     // if (window.confirm("Do you really want to delete the product?")) {
-    console.log(delete1);
+
     //setDelete(id)
     const formData = new FormData()
     formData.append("id", delete1)
     try {
       const { data } = await axiosInstance.post(endPoints.product.removeProduct, formData)
-      console.log(data);
+
 
       if (data.status === 200) {
         // setDelete(delete1)
         //setModal(true)
+        setTotalpages(data.totalPages)
+
         toast.success(data.message)
         setModal(false)
         fetchData()
@@ -46,10 +50,15 @@ export default function ProductList({ userlogin }) {
 
   const fetchData = async (data) => {
 
+    const formData = new FormData()
+    formData.append("page", currentPage)
+    formData.append("perpage", 10)
+
     try {
-      const { data } = await axiosInstance.post(endPoints.product.productList)
-      //console.log(data.data)
+      const { data } = await axiosInstance.post(endPoints.product.productList, formData)
+      console.log(data)
       setList(data.data)
+      setTotalpages(data.totalPages)
     } catch (error) {
 
     }
@@ -57,14 +66,28 @@ export default function ProductList({ userlogin }) {
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [currentPage])
 
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value)
+    console.log("change");
+
+  }
 
 
   return (
     <>
       <Box marginX={'auto'} padding={4} bgcolor={'#f5f5f5'} display={"flex"} flexDirection={"column"} gap={2}>
         <Typography variant="h1" color="initial" fontSize={40}>Products</Typography>
+
+        <Link to="/add-product">
+          <Button variant="outlined" startIcon={<Add />} color="primary">
+            Add New Product
+          </Button>
+
+        </Link>
+
+
         <Grid2 container spacing={2}>
 
 
@@ -117,12 +140,14 @@ export default function ProductList({ userlogin }) {
             )
           })}
         </Grid2>
-        <Link to="/add-product">
-          <Button variant="outlined" startIcon={<Add />} color="primary">
-            Add New Product
-          </Button>
 
-        </Link>
+        <Box display={"flex"} justifyContent={"center"} padding={4} bgcolor={'#fff'}>
+          {totalpages > 0 && (
+            <Pagination count={totalpages} page={currentPage} onChange={handlePageChange} shape="rounded" />
+          )}
+        </Box>
+
+
 
       </Box>
 

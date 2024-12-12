@@ -19,6 +19,9 @@ export default function ProductList({ userlogin }) {
 
 
   const handleDelete = async () => {
+    console.log(currentPage);
+    setCurrentPage()
+
     //setModal(true)
     // if (window.confirm("Do you really want to delete the product?")) {
 
@@ -27,7 +30,6 @@ export default function ProductList({ userlogin }) {
     formData.append("id", delete1)
     try {
       const { data } = await axiosInstance.post(endPoints.product.removeProduct, formData)
-
 
       if (data.status === 200) {
         // setDelete(delete1)
@@ -47,7 +49,6 @@ export default function ProductList({ userlogin }) {
     //}
   }
 
-
   const fetchData = async (data) => {
 
     const formData = new FormData()
@@ -57,6 +58,10 @@ export default function ProductList({ userlogin }) {
     try {
       const { data } = await axiosInstance.post(endPoints.product.productList, formData)
       console.log(data)
+      if (data.status === 201) {
+        setCurrentPage(data.totalPages)
+      }
+
       setList(data.data)
       setTotalpages(data.totalPages)
     } catch (error) {

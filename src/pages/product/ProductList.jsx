@@ -1,9 +1,9 @@
-import { Box, Typography, Button, Grid2, Card, CardMedia, CardContent, CardActions, IconButton, Pagination } from "@mui/material";
+import { Box, Typography, Button, Grid2, Card, CardMedia, CardContent, CardActions, IconButton, Pagination, ButtonGroup, ListItem, ListItemAvatar, Avatar, ListItemText, Divider } from "@mui/material";
 import { useEffect, useState } from "react";
 import axiosInstance, { productImage } from "../../api/axios";
 import { endPoints } from "../../api/endPoints";
 import { Link, useNavigate } from "react-router-dom";
-import { Add, DeleteOutline, EditOutlined } from "@mui/icons-material";
+import { Add, Delete, DeleteOutline, EditOutlined, GridOnOutlined, LinkOutlined, ListAltOutlined } from "@mui/icons-material";
 import toast from "react-hot-toast";
 import SweetAlertComponent from "../../ui/SweetAlert";
 
@@ -14,6 +14,7 @@ export default function ProductList({ userlogin }) {
   const [delete1, setDelete] = useState("")
   const [totalpages, setTotalpages] = useState(1)
   const [currentPage, setCurrentPage] = useState(1)
+  const [listview, setListview] = useState(false)
 
   const navigate = useNavigate()
 
@@ -25,15 +26,12 @@ export default function ProductList({ userlogin }) {
     //setModal(true)
     // if (window.confirm("Do you really want to delete the product?")) {
 
-    //setDelete(id)
     const formData = new FormData()
     formData.append("id", delete1)
     try {
       const { data } = await axiosInstance.post(endPoints.product.removeProduct, formData)
 
       if (data.status === 200) {
-        // setDelete(delete1)
-        //setModal(true)
         setTotalpages(data.totalPages)
 
         toast.success(data.message)
@@ -57,7 +55,6 @@ export default function ProductList({ userlogin }) {
 
     try {
       const { data } = await axiosInstance.post(endPoints.product.productList, formData)
-      console.log(data)
       if (data.status === 201) {
         setCurrentPage(data.totalPages)
       }
@@ -75,8 +72,6 @@ export default function ProductList({ userlogin }) {
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value)
-    console.log("change");
-
   }
 
 
@@ -89,8 +84,13 @@ export default function ProductList({ userlogin }) {
           <Button variant="outlined" startIcon={<Add />} color="primary">
             Add New Product
           </Button>
-
         </Link>
+
+        <ButtonGroup color="secondary" aria-label="" >
+          <Button variant={!listview ? "contained" : "outlined"} startIcon={<GridOnOutlined />} onClick={() => setListview(false)}>Grid</Button>
+          <Button variant={listview ? "contained" : "outlined"} startIcon={<ListAltOutlined />} onClick={() => setListview(true)}>List</Button>
+
+        </ButtonGroup>
 
 
         <Grid2 container spacing={2}>
@@ -99,49 +99,68 @@ export default function ProductList({ userlogin }) {
           {list?.map((product) => {
             //console.log(product._id)
             return (
-              <Grid2 size={4} key={product._id}>
-                <Card>
-                  <CardMedia
-                    sx={{ height: 140 }}
-                    image={productImage(product.image)}
-                    title={product.title}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {product.title}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      {product.description}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small" variant="outlined" onClick={() => { navigate(`/product/${product._id}`) }}>Learn More</Button>
+              <>
+                {!listview && (
+                  <Grid2 size={2.4} key={product._id}>
+                    <Card>
+                      <CardMedia
+                        sx={{ height: 140 }}
+                        image={productImage(product.image)}
+                        title={product.title}
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                          {product.title}
+                        </Typography>
 
-                    <Button size="small" color="primary" onClick={() => { navigate(`/product/update/${product._id}`) }}>
-                      <EditOutlined />
-                    </Button>
+                      </CardContent>
+                      <CardActions>
+                        <Button size="small" color="secondary" onClick={() => { navigate(`/product/${product._id}`) }}>
+                          <LinkOutlined />
+                        </Button>
 
-                    <Button size="small" onClick={() => ((setDelete(product._id), setModal(true)))}><DeleteOutline /></Button>
-                  </CardActions>
+                        <Button size="small" color="primary" onClick={() => { navigate(`/product/update/${product._id}`) }}>
+                          <EditOutlined />
+                        </Button>
 
-                </Card>
-              </Grid2>
-              // <ListItem
-              //   key={product._id}
-              //   secondaryAction={
-              //     // <IconButton aria-label="delete" onClick={() => handleDelete(product._id)}>
-              //     <IconButton aria-label="delete" onClick={() => handleDelete(product._id)}>
-              //       <Delete />
-              //     </IconButton>
-              //   }
-              // >
-              //   <ListItemAvatar>
-              //     <Avatar>
-              //       <img src={productImage(product.image)} />
-              //     </Avatar>
-              //   </ListItemAvatar>
-              //   <ListItemText primary={product.title} secondary={product.description} />
-              // </ListItem>
+                        <Button size="small" onClick={() => ((setDelete(product._id), setModal(true)))}><DeleteOutline /></Button>
+                      </CardActions>
+
+                    </Card>
+                  </Grid2>
+                )}
+                {listview && (
+                  <>
+                    <ListItem
+                      key={product._id}
+                      secondaryAction={
+                        // <IconButton aria-label="delete" onClick={() => handleDelete(product._id)}>
+                        <>
+                          <IconButton aria-label="details" onClick={() => { navigate(`/product/${product._id}`) }}>
+                            <LinkOutlined />
+                          </IconButton>
+                          <IconButton aria-label="edit" onClick={() => { navigate(`/product/update/${product._id}`) }}>
+                            <EditOutlined />
+                          </IconButton>
+                          <IconButton aria-label="delete" onClick={() => ((setDelete(product._id), setModal(true)))}>
+                            <DeleteOutline />
+                          </IconButton>
+                        </>
+
+                      }
+                    >
+                      <ListItemAvatar>
+                        <Avatar>
+                          <img src={productImage(product.image)} />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={product.title} secondary={product.description} />
+                    </ListItem>
+                  </>
+                )}
+
+
+              </>
             )
           })}
         </Grid2>
@@ -151,9 +170,6 @@ export default function ProductList({ userlogin }) {
             <Pagination count={totalpages} page={currentPage} onChange={handlePageChange} shape="rounded" />
           )}
         </Box>
-
-
-
       </Box>
 
       {modal &&
